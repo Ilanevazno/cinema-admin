@@ -1,0 +1,20 @@
+import { ReactElement } from 'react';
+import { Snackbar as SnackbarMui, Alert } from '@mui/material';
+import { SnackbarProps } from './interfaces';
+
+const Snackbar = ({ open, onClose, message, severity }: SnackbarProps): ReactElement => {
+  return (
+    <SnackbarMui
+      open={open}
+      autoHideDuration={3000}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+    >
+      <Alert onClose={onClose} severity={severity} variant="filled">
+        {message}
+      </Alert>
+    </SnackbarMui>
+  );
+};
+
+export default Snackbar;
