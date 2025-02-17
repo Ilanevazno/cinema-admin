@@ -15,12 +15,14 @@ export const useCategories = () => {
   const [deletedCategories, setDeletedCategories] = useState<{ id: string }[]>([]);
 
   const handleAddCategory = () => {
-    setEditingCategory({
+    const newCategory = {
       name: '',
       subCategories: [],
-      id: null,
-      tempId: Date.now(),
-    });
+      id: Date.now(),
+    };
+    setEditingCategory(newCategory);
+    setCategories([...categories, newCategory]);
+    navigate('/categories/create');
   };
 
   const handleEditCategory = (category: Category) => {
@@ -28,44 +30,31 @@ export const useCategories = () => {
   };
 
   const handleSaveCategory = (category: Category) => {
-    if (category.id) {
+    if (editingCategory) {
       setCategories(
         categories.map((currentCategory) =>
-          currentCategory.id === category.id ? category : currentCategory
+          currentCategory.id === editingCategory.id
+            ? { ...category, id: editingCategory.id }
+            : currentCategory
         )
       );
-    } else {
-      setCategories([
-        ...categories,
-        {
-          ...category,
-          id: null,
-          tempId: category.tempId || Date.now(),
-        },
-      ]);
     }
+
     setEditingCategory(undefined);
     navigate('/categories');
   };
 
-  const handleDeleteCategory = (categoryId: string | number | null, tempId?: number) => {
+  const handleDeleteCategory = (categoryId: number | null) => {
     openDialog({
       title: 'Удаление категории',
       content: 'Вы уверены, что хотите удалить эту категорию?',
       confirmText: 'Удалить',
       cancelText: 'Отмена',
       onConfirm: () => {
-        if (typeof categoryId === 'number') {
+        if (categoryId) {
           setDeletedCategories([...deletedCategories, { id: String(categoryId) }]);
         }
-        setCategories(
-          categories.filter(({ id, tempId: currentCategoryTempId }) => {
-            if (id === null) {
-              return currentCategoryTempId !== tempId;
-            }
-            return id !== categoryId;
-          })
-        );
+        setCategories(categories.filter(cat => cat.id !== categoryId));
         closeDialog();
       },
     });
@@ -74,12 +63,12 @@ export const useCategories = () => {
   const handleSaveChanges = () => {
     const changes: CategoryChanges = {
       newCategories: categories
-        .filter((category) => category.id === null)
-        .map(({ tempId, id, ...category }) => category),
+        .filter(category => !initialData.categories.some(initial => initial.id === category.id))
+        .map(({ id, ...categoryData }) => categoryData),
       updatedCategories: categories
-        .filter((category) => typeof category.id === 'number')
-        .map((category) => ({
-          id: String(category.id),
+        .filter(category => initialData.categories.some(initial => initial.id === category.id))
+        .map(category => ({
+          id: Number(category.id),
           name: category.name,
           updatedSubCategories: category.subCategories,
           deletedSubCategories: [],
@@ -94,7 +83,6 @@ export const useCategories = () => {
   return {
     categories,
     editingCategory,
-    deletedCategories,
     handleAddCategory,
     handleEditCategory,
     handleSaveCategory,

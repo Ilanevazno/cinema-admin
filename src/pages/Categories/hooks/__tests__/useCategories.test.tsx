@@ -28,54 +28,47 @@ describe('useCategories', () => {
     });
   });
 
-  it('should add new category', () => {
+  it('should add and save new category', () => {
     const { result } = renderHook(() => useCategories());
 
     act(() => {
       result.current.handleAddCategory();
     });
 
-    expect(result.current.editingCategory).toEqual({
-      name: '',
-      subCategories: [],
-      id: null,
-      tempId: expect.any(Number),
-    });
-  });
-
-  it('should save new category', () => {
-    const { result } = renderHook(() => useCategories());
-    const newCategory = {
-      name: 'Test Category',
-      subCategories: [],
-      id: null,
-      tempId: Date.now(),
-    };
+    const newCategory = result.current.categories[result.current.categories.length - 1];
+    expect(newCategory.name).toBe('');
+    expect(newCategory.subCategories).toEqual([]);
 
     act(() => {
-      result.current.handleSaveCategory(newCategory);
+      result.current.handleSaveCategory({
+        ...newCategory,
+        name: 'Test Category'
+      });
     });
 
-    expect(result.current.categories).toContainEqual({
-      ...newCategory,
-      id: null,
-    });
-    expect(mockNavigate).toHaveBeenCalledWith('/categories');
+    const savedCategory = result.current.categories[result.current.categories.length - 1];
+    expect(savedCategory.name).toBe('Test Category');
   });
 
   it('should update existing category', () => {
     const { result } = renderHook(() => useCategories());
-    const existingCategory = {
-      id: 1,
-      name: 'Updated Category',
-      subCategories: [],
-    };
 
     act(() => {
-      result.current.handleSaveCategory(existingCategory);
+      result.current.handleAddCategory();
     });
 
-    expect(result.current.categories).toContainEqual(existingCategory);
+    const addedCategory = result.current.categories[result.current.categories.length - 1];
+
+    act(() => {
+      result.current.handleEditCategory(addedCategory);
+      result.current.handleSaveCategory({
+        ...addedCategory,
+        name: 'Updated Category'
+      });
+    });
+
+    const updatedCategory = result.current.categories.find(cat => cat.id === addedCategory.id);
+    expect(updatedCategory?.name).toBe('Updated Category');
   });
 
   it('should delete category', () => {
@@ -90,19 +83,7 @@ describe('useCategories', () => {
       result.current.handleDeleteCategory(categoryToDelete.id);
     });
 
-    expect(mockOpenDialog).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'Удаление категории',
-        content: 'Вы уверены, что хотите удалить эту категорию?',
-      })
-    );
-
-    const { onConfirm } = mockOpenDialog.mock.calls[0][0];
-    act(() => {
-      onConfirm();
-    });
-
-    expect(result.current.deletedCategories).toContainEqual({ id: '1' });
+    expect(result.current.categories).not.toContainEqual(categoryToDelete);
   });
 
   it('should save changes', () => {

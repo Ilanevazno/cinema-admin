@@ -6,7 +6,7 @@ const Snackbar = ({ open, onClose, message, severity }: SnackbarProps): ReactEle
   return (
     <SnackbarMui
       open={open}
-      autoHideDuration={3000}
+      autoHideDuration={1500}
       onClose={onClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
     >
