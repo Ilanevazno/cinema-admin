@@ -52,7 +52,7 @@ describe('CategoryList', () => {
     render(<CategoryList {...mockProps} />);
     const deleteButton = screen.getByTestId('DeleteIcon').parentElement;
     fireEvent.click(deleteButton!);
-    expect(mockProps.onDeleteCategory).toHaveBeenCalledWith(1);
+    expect(mockProps.onDeleteCategory).toHaveBeenCalledWith(1, undefined);
   });
 
   it('calls onSaveChanges when save button is clicked', () => {

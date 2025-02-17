@@ -3,7 +3,6 @@ import { Button, TextField, Typography, IconButton } from '@mui/material';
 import { Formik, Form, FieldArray } from 'formik';
 import FilmSelector from '../FilmSelector';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { CategoryFormProps } from './interfaces';
 import { Category, SubCategory } from '@models';
 import {
   StyledForm,
@@ -14,21 +13,31 @@ import {
 } from './styles';
 import { getFieldError } from './utils';
 import { validationSchema } from './constants';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FormikHelpers } from 'src/shared/interfaces';
+import { useCategories } from '@providers';
+import { initialData } from '@shared/constants';
 
-const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps): ReactElement => {
+const CategoryForm = (): ReactElement => {
+  const navigate = useNavigate();
   const location = useLocation();
   const isCreating = location.pathname.includes('/create');
 
+  const { editingCategory, handleSaveCategory, setEditingCategory } = useCategories();
+
   const initialValues: Category = useMemo(
     () =>
-      category || {
+      editingCategory || {
         name: '',
         subCategories: [],
       },
-    [category]
+    [editingCategory]
   );
+
+  const handleCancel = () => {
+    setEditingCategory(undefined);
+    navigate('/categories');
+  };
 
   const handleAddFilm = useCallback(
     (
@@ -97,7 +106,7 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
 
         <FilmSelector
           selectedFilmIds={subCategory.filmIds}
-          availableFilms={films}
+          availableFilms={initialData.films}
           onAddFilm={(filmId) =>
             handleAddFilm(index, filmId, formikHelpers.setFieldValue, formikHelpers.values)
           }
@@ -120,11 +129,15 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
         )}
       </StyledSubCategoryContainer>
     ),
-    [films, handleAddFilm, handleRemoveFilm]
+    [handleAddFilm, handleRemoveFilm]
   );
 
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSave}>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSaveCategory}
+    >
       {({ values, errors, touched, handleChange, setFieldValue }) => (
         <Form>
           <StyledForm elevation={3}>
@@ -181,7 +194,7 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
               <Button variant="contained" color="primary" type="submit" size="large">
                 Сохранить
               </Button>
-              <Button variant="outlined" onClick={onCancel} size="large">
+              <Button variant="outlined" onClick={handleCancel} size="large">
                 Отмена
               </Button>
             </StyledButtonContainer>

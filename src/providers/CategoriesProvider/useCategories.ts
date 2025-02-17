@@ -38,10 +38,8 @@ export const useCategories = () => {
       deletedCategories: deletedCategoryIds.map((id) => ({ id })),
     };
 
-    // Здесь будет API запрос для сохранения изменений
     console.log({ changes });
 
-    // Очищаем состояния после успешного сохранения
     setNewCategories([]);
     setUpdatedCategories([]);
     setDeletedCategoryIds([]);

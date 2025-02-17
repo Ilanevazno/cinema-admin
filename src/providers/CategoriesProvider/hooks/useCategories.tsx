@@ -34,7 +34,7 @@ export const useCategories = () => {
       setCategories(
         categories.map((currentCategory) =>
           currentCategory.id === editingCategory.id
-            ? { ...category, id: editingCategory.id }
+            ? { ...category, id: editingCategory.id, isTemp: true }
             : currentCategory
         )
       );
@@ -44,14 +44,16 @@ export const useCategories = () => {
     navigate('/categories');
   };
 
-  const handleDeleteCategory = (categoryId: number | null) => {
+  console.log({ categories });
+
+  const handleDeleteCategory = (categoryId: number | null, isTemp: boolean = false) => {
     openDialog({
       title: 'Удаление категории',
       content: 'Вы уверены, что хотите удалить эту категорию?',
       confirmText: 'Удалить',
       cancelText: 'Отмена',
       onConfirm: () => {
-        if (categoryId) {
+        if (categoryId && !isTemp) {
           setDeletedCategories([...deletedCategories, { id: String(categoryId) }]);
         }
         setCategories(categories.filter((currentCategory) => currentCategory.id !== categoryId));

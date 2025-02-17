@@ -72,7 +72,7 @@ const CategoryList = ({
                 <IconButton
                   color="error"
                   size="small"
-                  onClick={() => onDeleteCategory(category.id || null)}
+                  onClick={() => onDeleteCategory(category.id || null, category.isTemp)}
                 >
                   <DeleteIcon />
                 </IconButton>

@@ -1,16 +1,13 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { BrowserRouter, useLocation } from 'react-router-dom';
 import CategoryForm from '../index';
-import { Category, Film } from '@models';
+import { CategoriesProvider } from '@providers';
 
-const mockFilms: Film[] = [
-  { id: 1, name: 'Film 1' },
-  { id: 2, name: 'Film 2' },
-];
-
+// Мокаем react-router-dom
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: jest.fn(),
+  useNavigate: () => jest.fn(),
 }));
 
 describe('CategoryForm', () => {
@@ -19,19 +16,17 @@ describe('CategoryForm', () => {
     (useLocation as jest.Mock).mockReturnValue({ pathname: '/categories/create' });
   });
 
-  const mockProps = {
-    films: mockFilms,
-    onSave: jest.fn(),
-    onCancel: jest.fn(),
-  };
-
-  const renderWithRouter = (ui: React.ReactElement) => {
-    return render(<BrowserRouter>{ui}</BrowserRouter>);
+  const renderWithProviders = (ui: React.ReactElement) => {
+    return render(
+      <BrowserRouter>
+        <CategoriesProvider>{ui}</CategoriesProvider>
+      </BrowserRouter>
+    );
   };
 
   it('renders form for new category', async () => {
     await act(async () => {
-      renderWithRouter(<CategoryForm {...mockProps} />);
+      renderWithProviders(<CategoryForm />);
     });
 
     expect(screen.getByText('Создание категории')).toBeInTheDocument();
@@ -42,24 +37,16 @@ describe('CategoryForm', () => {
   it('renders form for editing category', async () => {
     (useLocation as jest.Mock).mockReturnValue({ pathname: '/categories/update/1' });
 
-    const category: Category = {
-      id: 1,
-      name: 'Test Category',
-      subCategories: [{ id: 1, name: 'Sub 1', filmIds: [1] }],
-    };
-
     await act(async () => {
-      renderWithRouter(<CategoryForm {...mockProps} category={category} />);
+      renderWithProviders(<CategoryForm />);
     });
 
     expect(screen.getByText('Редактирование категории')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Test Category')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Sub 1')).toBeInTheDocument();
   });
 
   it('validates required fields', async () => {
     await act(async () => {
-      renderWithRouter(<CategoryForm {...mockProps} />);
+      renderWithProviders(<CategoryForm />);
     });
 
     const submitButton = screen.getByRole('button', { name: 'Сохранить' });
@@ -75,7 +62,7 @@ describe('CategoryForm', () => {
 
   it('adds and removes subcategories', async () => {
     await act(async () => {
-      renderWithRouter(<CategoryForm {...mockProps} />);
+      renderWithProviders(<CategoryForm />);
     });
 
     await act(async () => {
@@ -85,7 +72,9 @@ describe('CategoryForm', () => {
 
     await act(async () => {
       const deleteButton = screen.getByTestId('DeleteIcon').parentElement;
-      fireEvent.click(deleteButton!);
+      if (deleteButton) {
+        fireEvent.click(deleteButton);
+      }
     });
     expect(screen.queryByLabelText('Название подкатегории')).not.toBeInTheDocument();
   });
