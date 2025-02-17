@@ -11,15 +11,15 @@ export const useCategories = () => {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState<Category[]>(initialData.categories);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | undefined>(undefined);
   const [deletedCategories, setDeletedCategories] = useState<{ id: string }[]>([]);
 
   const handleAddCategory = () => {
-    setEditingCategory({ 
-      name: '', 
-      subCategories: [], 
+    setEditingCategory({
+      name: '',
+      subCategories: [],
       id: null,
-      tempId: Date.now()
+      tempId: Date.now(),
     });
   };
 
@@ -29,15 +29,22 @@ export const useCategories = () => {
 
   const handleSaveCategory = (category: Category) => {
     if (category.id) {
-      setCategories(categories.map((currentCategory) => (currentCategory.id === category.id ? category : currentCategory)));
+      setCategories(
+        categories.map((currentCategory) =>
+          currentCategory.id === category.id ? category : currentCategory
+        )
+      );
     } else {
-      setCategories([...categories, { 
-        ...category, 
-        id: null,
-        tempId: category.tempId || Date.now()
-      }]);
+      setCategories([
+        ...categories,
+        {
+          ...category,
+          id: null,
+          tempId: category.tempId || Date.now(),
+        },
+      ]);
     }
-    setEditingCategory(null);
+    setEditingCategory(undefined);
     navigate('/categories');
   };
 
@@ -51,12 +58,14 @@ export const useCategories = () => {
         if (typeof categoryId === 'number') {
           setDeletedCategories([...deletedCategories, { id: String(categoryId) }]);
         }
-        setCategories(categories.filter(({ id, tempId: currentCategoryTempId }) => {
-          if (id === null) {
-            return currentCategoryTempId !== tempId;
-          }
-          return id !== categoryId;
-        }));
+        setCategories(
+          categories.filter(({ id, tempId: currentCategoryTempId }) => {
+            if (id === null) {
+              return currentCategoryTempId !== tempId;
+            }
+            return id !== categoryId;
+          })
+        );
         closeDialog();
       },
     });

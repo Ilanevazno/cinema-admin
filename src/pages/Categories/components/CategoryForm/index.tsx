@@ -19,7 +19,7 @@ import { useLocation } from 'react-router-dom';
 const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps): ReactElement => {
   const location = useLocation();
   const isCreating = location.pathname.includes('/create');
-  
+
   const initialValues: Category = useMemo(
     () =>
       category || {
@@ -133,11 +133,13 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
                   >
                     Добавить подкатегорию
                   </Button>
-                  {touched.subCategories && errors.subCategories && typeof errors.subCategories === 'string' && (
-                    <Typography color="error" variant="caption">
-                      {errors.subCategories}
-                    </Typography>
-                  )}
+                  {touched.subCategories &&
+                    errors.subCategories &&
+                    typeof errors.subCategories === 'string' && (
+                      <Typography color="error" variant="caption">
+                        {errors.subCategories}
+                      </Typography>
+                    )}
                 </>
               )}
             </FieldArray>

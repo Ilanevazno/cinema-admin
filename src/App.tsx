@@ -10,7 +10,7 @@ const App = (): ReactElement => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-      <CssBaseline />
+        <CssBaseline />
         <SnackbarProvider>
           <DialogProvider>
             <RouterComponent />

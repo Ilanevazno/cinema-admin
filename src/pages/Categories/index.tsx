@@ -19,7 +19,7 @@ const Categories = () => {
   } = useCategories();
 
   const handleCancel = () => {
-    setEditingCategory(null);
+    setEditingCategory(undefined);
     navigate('/categories');
   };
 
@@ -27,8 +27,8 @@ const Categories = () => {
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       <Box maxWidth={1200} margin="0 auto" p={3}>
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <CategoryList
                 categories={categories}
@@ -46,8 +46,8 @@ const Categories = () => {
               />
             }
           />
-          <Route 
-            path="/create" 
+          <Route
+            path="/create"
             element={
               <CategoryForm
                 films={initialData.films}
@@ -56,8 +56,8 @@ const Categories = () => {
               />
             }
           />
-          <Route 
-            path="/update/:id" 
+          <Route
+            path="/update/:id"
             element={
               <CategoryForm
                 category={editingCategory}

@@ -49,12 +49,7 @@ const CategoryList = ({
 
       {categories.length === 0 ? (
         <StyledCategoryContainer elevation={2}>
-          <Typography 
-            variant="h6" 
-            color="text.secondary" 
-            textAlign="center" 
-            py={4}
-          >
+          <Typography variant="h6" color="text.secondary" textAlign="center" py={4}>
             Создайте первую категорию
           </Typography>
         </StyledCategoryContainer>
@@ -77,7 +72,7 @@ const CategoryList = ({
                 <IconButton
                   color="error"
                   size="small"
-                  onClick={() => onDeleteCategory(category.id, category.tempId)}
+                  onClick={() => onDeleteCategory(category.id || null, category.tempId)}
                 >
                   <DeleteIcon />
                 </IconButton>

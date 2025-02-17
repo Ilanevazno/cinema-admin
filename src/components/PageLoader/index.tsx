@@ -13,4 +13,4 @@ const PageLoader = (): ReactElement => (
   </Box>
 );
 
-export default PageLoader; 
+export default PageLoader;
