@@ -42,7 +42,7 @@ describe('useCategories', () => {
     act(() => {
       result.current.handleSaveCategory({
         ...newCategory,
-        name: 'Test Category'
+        name: 'Test Category',
       });
     });
 
@@ -63,11 +63,11 @@ describe('useCategories', () => {
       result.current.handleEditCategory(addedCategory);
       result.current.handleSaveCategory({
         ...addedCategory,
-        name: 'Updated Category'
+        name: 'Updated Category',
       });
     });
 
-    const updatedCategory = result.current.categories.find(cat => cat.id === addedCategory.id);
+    const updatedCategory = result.current.categories.find((currentCategory) => currentCategory.id === addedCategory.id);
     expect(updatedCategory?.name).toBe('Updated Category');
   });
 

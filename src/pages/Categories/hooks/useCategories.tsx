@@ -54,7 +54,7 @@ export const useCategories = () => {
         if (categoryId) {
           setDeletedCategories([...deletedCategories, { id: String(categoryId) }]);
         }
-        setCategories(categories.filter(cat => cat.id !== categoryId));
+        setCategories(categories.filter((currentCategory) => currentCategory.id !== categoryId));
         closeDialog();
       },
     });
@@ -63,11 +63,11 @@ export const useCategories = () => {
   const handleSaveChanges = () => {
     const changes: CategoryChanges = {
       newCategories: categories
-        .filter(category => !initialData.categories.some(initial => initial.id === category.id))
+        .filter((category) => !initialData.categories.some((initial) => initial.id === category.id))
         .map(({ id, ...categoryData }) => categoryData),
       updatedCategories: categories
-        .filter(category => initialData.categories.some(initial => initial.id === category.id))
-        .map(category => ({
+        .filter((category) => initialData.categories.some((initial) => initial.id === category.id))
+        .map((category) => ({
           id: Number(category.id),
           name: category.name,
           updatedSubCategories: category.subCategories,
