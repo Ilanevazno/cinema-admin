@@ -3,7 +3,7 @@ import { lazy, Suspense, ReactElement } from 'react';
 import PageLoader from '@components/PageLoader';
 
 const Categories = lazy(() => import('@pages/Categories'));
-const CategoriesUpdate = lazy(() => import('@pages/Categories/components/CategoryForm'));
+const CategoriesUpdate = lazy(() => import('@pages/CategoryForm'));
 
 const RouterComponent = (): ReactElement => {
   return (

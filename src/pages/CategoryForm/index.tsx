@@ -1,7 +1,7 @@
 import { memo, ReactElement, useCallback, useMemo } from 'react';
 import { Button, TextField, Typography, IconButton } from '@mui/material';
 import { Formik, Form, FieldArray } from 'formik';
-import FilmSelector from '../FilmSelector';
+import FilmSelector from './components/FilmSelector';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Category, SubCategory } from '@models';
 import {
