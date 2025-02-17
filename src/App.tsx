@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { theme } from '@shared';
-import { DialogProvider, SnackbarProvider } from '@providers';
+import { DialogProvider, SnackbarProvider, CategoriesProvider } from '@providers';
 import RouterComponent from '@components/Router';
 
 const App = (): ReactElement => {
@@ -13,7 +13,9 @@ const App = (): ReactElement => {
         <CssBaseline />
         <SnackbarProvider>
           <DialogProvider>
-            <RouterComponent />
+            <CategoriesProvider>
+              <RouterComponent />
+            </CategoriesProvider>
           </DialogProvider>
         </SnackbarProvider>
       </ThemeProvider>

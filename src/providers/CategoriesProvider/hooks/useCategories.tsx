@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Category, CategoryChanges } from '@models';
 import { useNavigate } from 'react-router-dom';
 
-import { initialData } from '../constants';
 import { useDialog, useSnackbar } from '@providers';
+import { initialData } from '@shared/constants';
 
 export const useCategories = () => {
   const { showSnackbar } = useSnackbar();

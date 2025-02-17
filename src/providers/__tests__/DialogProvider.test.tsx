@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { DialogProvider, useDialog } from '../dialogProvider';
+import { DialogProvider, useDialog } from '../DialogProvider';
 
 const TestComponent = () => {
   const { openDialog } = useDialog();

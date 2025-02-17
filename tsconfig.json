@@ -22,7 +22,8 @@
       "@pages/*": ["./src/pages/*"],
       "@components/*": ["./src/components/*"],
       "@models": ["./src/models"],
-      "@providers": ["./src/providers"]
+      "@providers": ["./src/providers"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src"],

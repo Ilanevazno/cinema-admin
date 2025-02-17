@@ -2,8 +2,8 @@ import { Box } from '@mui/material';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import CategoryList from './components/CategoryList';
 import CategoryForm from './components/CategoryForm';
-import { useCategories } from './hooks/useCategories';
-import { initialData } from './constants';
+import { useCategories } from '@providers';
+import { initialData } from '@shared';
 
 const Categories = () => {
   const navigate = useNavigate();

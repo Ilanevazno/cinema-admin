@@ -1,2 +1,3 @@
-export * from './dialogProvider';
-export * from './snackbarProvider';
+export * from './DialogProvider';
+export * from './SnackbarProvider';
+export * from './CategoriesProvider';
