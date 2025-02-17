@@ -41,7 +41,7 @@ export const useCategories = () => {
     }
 
     setEditingCategory(undefined);
-    navigate('/categories');
+    navigate('/');
   };
 
   const handleDeleteCategory = (categoryId: number | null, isTemp: boolean = false) => {

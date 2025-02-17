@@ -36,7 +36,7 @@ const CategoryForm = (): ReactElement => {
 
   const handleCancel = () => {
     setEditingCategory(undefined);
-    navigate('/categories');
+    navigate('/');
   };
 
   const handleAddFilm = useCallback(
