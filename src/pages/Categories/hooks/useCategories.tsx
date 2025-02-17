@@ -60,19 +60,25 @@ export const useCategories = () => {
     });
   };
 
+  const getNewCategoriesToSave = () =>
+    categories
+      .filter((category) => !initialData.categories.some((initial) => initial.id === category.id))
+      .map(({ name, subCategories }) => ({ name, subCategories }));
+
+  const getUpdatedCategoriesToSave = () =>
+    categories
+      .filter((category) => initialData.categories.some((initial) => initial.id === category.id))
+      .map((category) => ({
+        id: Number(category.id),
+        name: category.name,
+        updatedSubCategories: category.subCategories,
+        deletedSubCategories: [],
+      }));
+
   const handleSaveChanges = () => {
     const changes: CategoryChanges = {
-      newCategories: categories
-        .filter((category) => !initialData.categories.some((initial) => initial.id === category.id))
-        .map(({ id, ...categoryData }) => categoryData),
-      updatedCategories: categories
-        .filter((category) => initialData.categories.some((initial) => initial.id === category.id))
-        .map((category) => ({
-          id: Number(category.id),
-          name: category.name,
-          updatedSubCategories: category.subCategories,
-          deletedSubCategories: [],
-        })),
+      newCategories: getNewCategoriesToSave(),
+      updatedCategories: getUpdatedCategoriesToSave(),
       deletedCategories,
     };
 

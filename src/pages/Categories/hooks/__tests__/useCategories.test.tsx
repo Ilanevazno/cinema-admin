@@ -67,7 +67,9 @@ describe('useCategories', () => {
       });
     });
 
-    const updatedCategory = result.current.categories.find((currentCategory) => currentCategory.id === addedCategory.id);
+    const updatedCategory = result.current.categories.find(
+      (currentCategory) => currentCategory.id === addedCategory.id
+    );
     expect(updatedCategory?.name).toBe('Updated Category');
   });
 

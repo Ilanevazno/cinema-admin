@@ -4,7 +4,7 @@ import { Formik, Form, FieldArray } from 'formik';
 import FilmSelector from '../FilmSelector';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { CategoryFormProps } from './interfaces';
-import { Category } from '@models';
+import { Category, SubCategory } from '@models';
 import {
   StyledForm,
   StyledSubCategoryContainer,
@@ -15,6 +15,7 @@ import {
 import { getFieldError } from './utils';
 import { validationSchema } from './constants';
 import { useLocation } from 'react-router-dom';
+import { FormikHelpers } from 'src/shared/interfaces';
 
 const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps): ReactElement => {
   const location = useLocation();
@@ -30,7 +31,12 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
   );
 
   const handleAddFilm = useCallback(
-    (index: number, filmId: number, setFieldValue: Function, values: Category) => {
+    (
+      index: number,
+      filmId: number,
+      setFieldValue: FormikHelpers<Category>['setFieldValue'],
+      values: Category
+    ) => {
       setFieldValue(`subCategories.${index}.filmIds`, [
         ...(values.subCategories[index]?.filmIds || []),
         filmId,
@@ -40,7 +46,12 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
   );
 
   const handleRemoveFilm = useCallback(
-    (index: number, filmId: number, setFieldValue: Function, values: Category) => {
+    (
+      index: number,
+      filmId: number,
+      setFieldValue: FormikHelpers<Category>['setFieldValue'],
+      values: Category
+    ) => {
       setFieldValue(
         `subCategories.${index}.filmIds`,
         values.subCategories[index]?.filmIds.filter((id) => id !== filmId) || []
@@ -51,10 +62,10 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
 
   const renderSubCategory = useCallback(
     (
-      subCategory: any,
+      subCategory: SubCategory,
       index: number,
-      remove: Function,
-      { handleChange, setFieldValue, touched, errors, values }: any
+      remove: (index: number) => void,
+      formikHelpers: FormikHelpers<Category>
     ) => (
       <StyledSubCategoryContainer key={index} elevation={1}>
         <StyledSubCategoryHeader>
@@ -63,11 +74,21 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
             name={`subCategories.${index}.name`}
             label="Название подкатегории"
             value={subCategory.name}
-            onChange={handleChange}
+            onChange={formikHelpers.handleChange}
             margin="normal"
             variant="outlined"
-            error={!!getFieldError(touched, errors, `subCategories.${index}.name`)}
-            helperText={getFieldError(touched, errors, `subCategories.${index}.name`)}
+            error={
+              !!getFieldError(
+                formikHelpers.touched,
+                formikHelpers.errors,
+                `subCategories.${index}.name`
+              )
+            }
+            helperText={getFieldError(
+              formikHelpers.touched,
+              formikHelpers.errors,
+              `subCategories.${index}.name`
+            )}
           />
           <IconButton color="error" onClick={() => remove(index)}>
             <DeleteIcon />
@@ -77,12 +98,24 @@ const CategoryForm = ({ category, films, onSave, onCancel }: CategoryFormProps):
         <FilmSelector
           selectedFilmIds={subCategory.filmIds}
           availableFilms={films}
-          onAddFilm={(filmId) => handleAddFilm(index, filmId, setFieldValue, values)}
-          onRemoveFilm={(filmId) => handleRemoveFilm(index, filmId, setFieldValue, values)}
+          onAddFilm={(filmId) =>
+            handleAddFilm(index, filmId, formikHelpers.setFieldValue, formikHelpers.values)
+          }
+          onRemoveFilm={(filmId) =>
+            handleRemoveFilm(index, filmId, formikHelpers.setFieldValue, formikHelpers.values)
+          }
         />
-        {getFieldError(touched, errors, `subCategories.${index}.filmIds`) && (
+        {getFieldError(
+          formikHelpers.touched,
+          formikHelpers.errors,
+          `subCategories.${index}.filmIds`
+        ) && (
           <Typography color="error" variant="caption" sx={{ mt: 1 }}>
-            {getFieldError(touched, errors, `subCategories.${index}.filmIds`)}
+            {getFieldError(
+              formikHelpers.touched,
+              formikHelpers.errors,
+              `subCategories.${index}.filmIds`
+            )}
           </Typography>
         )}
       </StyledSubCategoryContainer>
