@@ -5,6 +5,6 @@ export interface CategoryListProps {
   films: Film[];
   onEditCategory: (category: Category) => void;
   onAddCategory: () => void;
-  onDeleteCategory: (categoryId: number) => void;
+  onDeleteCategory: (categoryId: string | number | null, tempId?: number) => void;
   onSaveChanges: () => void;
 }

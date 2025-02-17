@@ -1,11 +1,12 @@
 export interface SubCategory {
-  id?: number | null;
+  id?: number | string | null;
   name: string;
   filmIds: number[];
 }
 
 export interface Category {
-  id?: number | null;
+  id?: number | string | null;
+  tempId?: number;
   name: string;
   subCategories: SubCategory[];
 }

@@ -13,10 +13,14 @@ export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>(initialData.categories);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deletedCategories, setDeletedCategories] = useState<{ id: string }[]>([]);
-  const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null);
 
   const handleAddCategory = () => {
-    setEditingCategory({ name: '', subCategories: [] });
+    setEditingCategory({ 
+      name: '', 
+      subCategories: [], 
+      id: null,
+      tempId: Date.now()
+    });
   };
 
   const handleEditCategory = (category: Category) => {
@@ -25,23 +29,34 @@ export const useCategories = () => {
 
   const handleSaveCategory = (category: Category) => {
     if (category.id) {
-      setCategories(categories.map((c) => (c.id === category.id ? category : c)));
+      setCategories(categories.map((currentCategory) => (currentCategory.id === category.id ? category : currentCategory)));
     } else {
-      setCategories([...categories, { ...category, id: Date.now() }]);
+      setCategories([...categories, { 
+        ...category, 
+        id: null,
+        tempId: category.tempId || Date.now()
+      }]);
     }
     setEditingCategory(null);
     navigate('/categories');
   };
 
-  const handleDeleteCategory = (categoryId: number) => {
+  const handleDeleteCategory = (categoryId: string | number | null, tempId?: number) => {
     openDialog({
       title: 'Удаление категории',
       content: 'Вы уверены, что хотите удалить эту категорию?',
       confirmText: 'Удалить',
       cancelText: 'Отмена',
       onConfirm: () => {
-        setCategories(categories.filter((c) => c.id !== categoryId));
-        setDeletedCategories([...deletedCategories, { id: String(categoryId) }]);
+        if (typeof categoryId === 'number') {
+          setDeletedCategories([...deletedCategories, { id: String(categoryId) }]);
+        }
+        setCategories(categories.filter(({ id, tempId: currentCategoryTempId }) => {
+          if (id === null) {
+            return currentCategoryTempId !== tempId;
+          }
+          return id !== categoryId;
+        }));
         closeDialog();
       },
     });
@@ -49,20 +64,21 @@ export const useCategories = () => {
 
   const handleSaveChanges = () => {
     const changes: CategoryChanges = {
-      newCategories: categories.filter((c) => !c.id),
+      newCategories: categories
+        .filter((category) => category.id === null)
+        .map(({ tempId, id, ...category }) => category),
       updatedCategories: categories
-        .filter((c) => c.id)
-        .map((c) => ({
-          id: String(c.id),
-          name: c.name,
-          updatedSubCategories: c.subCategories,
+        .filter((category) => typeof category.id === 'number')
+        .map((category) => ({
+          id: String(category.id),
+          name: category.name,
+          updatedSubCategories: category.subCategories,
           deletedSubCategories: [],
         })),
       deletedCategories,
     };
 
     console.log({ changes });
-
     showSnackbar({ message: 'Изменения успешно сохранены' });
   };
 
@@ -70,7 +86,6 @@ export const useCategories = () => {
     categories,
     editingCategory,
     deletedCategories,
-    categoryToDelete,
     handleAddCategory,
     handleEditCategory,
     handleSaveCategory,

@@ -74,15 +74,13 @@ const CategoryList = ({
                 >
                   Редактировать
                 </Button>
-                {category.id && (
-                  <IconButton
-                    color="error"
-                    size="small"
-                    onClick={() => onDeleteCategory(category.id as number)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                )}
+                <IconButton
+                  color="error"
+                  size="small"
+                  onClick={() => onDeleteCategory(category.id, category.tempId)}
+                >
+                  <DeleteIcon />
+                </IconButton>
               </Box>
             </StyledCategoryHeader>
 
