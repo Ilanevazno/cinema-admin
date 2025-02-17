@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Category, CategoryChanges } from '@models';
+import { Category } from '@models';
 
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -27,23 +27,10 @@ export const useCategories = () => {
   }, []);
 
   const saveChanges = useCallback(async () => {
-    const changes: CategoryChanges = {
-      newCategories,
-      updatedCategories: updatedCategories.map((cat) => ({
-        id: cat.id!,
-        name: cat.name,
-        updatedSubCategories: cat.subCategories,
-        deletedSubCategories: [],
-      })),
-      deletedCategories: deletedCategoryIds.map((id) => ({ id })),
-    };
-
-    console.log({ changes });
-
     setNewCategories([]);
     setUpdatedCategories([]);
     setDeletedCategoryIds([]);
-  }, [newCategories, updatedCategories, deletedCategoryIds]);
+  }, []);
 
   return {
     categories,

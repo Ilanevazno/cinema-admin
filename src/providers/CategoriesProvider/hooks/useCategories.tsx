@@ -44,8 +44,6 @@ export const useCategories = () => {
     navigate('/categories');
   };
 
-  console.log({ categories });
-
   const handleDeleteCategory = (categoryId: number | null, isTemp: boolean = false) => {
     openDialog({
       title: 'Удаление категории',
