@@ -1,5 +1,5 @@
 import { render, screen, act } from '@testing-library/react';
-import { SnackbarProvider, useSnackbar } from '../SnackbarProvider';
+import { SnackbarProvider, useSnackbar } from '../index';
 
 const TestComponent = () => {
   const { showSnackbar } = useSnackbar();
